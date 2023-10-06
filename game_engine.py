@@ -71,8 +71,10 @@ class GameEngine():
             return True
         else:
             for block in self.puzzle.vectors:
-                if block.y not in self.obstacles: self.obstacles[block.y] = [block]
-                else: self.obstacles[block.y].append(block)
+                if block.y not in self.obstacles:
+                    self.obstacles[block.y] = [block]
+                else:
+                    self.obstacles[block.y].append(block)
             if any([block.y < 0 for block in sum(self.obstacles.values(),[])]):
                 self.new_game()
                 return None

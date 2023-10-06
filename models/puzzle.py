@@ -7,11 +7,11 @@ class BasePuzzle:
         self.vectors_next = []
         self.index = 0
 
-    def update(self):
+    def update(self, available_cells, obstacles):
         if all(
             [
-                vector in game.all_cells
-                and vector not in sum(game.obstacles.values(), [])
+                vector in available_cells
+                and vector not in sum(obstacles, [])
                 for vector in self.vectors_next
             ]
         ):

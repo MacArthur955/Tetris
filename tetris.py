@@ -22,7 +22,7 @@ def tetris():
             if event.key == K_SPACE:
                 game_engine.fall_down()
             elif event.key == K_w or event.key == K_UP:
-                game_engine.puzzle.update()
+                game_engine.puzzle.update(game_engine.all_cells, game_engine.obstacles.values())
             elif event.key == K_s or event.key == K_DOWN:
                 game_engine.direction = pygame.Vector2(0, 1)
             elif event.key == K_a or event.key == K_LEFT:
@@ -39,7 +39,7 @@ def menu():
         elif event.type == KEYDOWN:
             if event.key == K_RETURN:
                 return tetris
-    game_engine.screen.blit(game_engine.text_start, (55, 110, 200, 200))
+    game_engine.screen.blit(source=game_engine.text_start, dest=(55, 110, 200, 200))
 
 
 menu()
