@@ -1,0 +1,28 @@
+[tool.pytest.ini_options]
+    testpaths = ["tests"]
+
+[tool.black]
+line-length = 100
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | venv
+  | playground
+)/
+'''
+
+[tool.isort]
+    profile = "black"
+    line_length = 100
+    lines_after_imports = 2
+    multi_line_output = 3
+    skip=["playground", "venv"]
