@@ -3,50 +3,24 @@ import random
 from pygame import *
 from random import *
 from models import puzzle_t, puzzle_i, puzzle_j, puzzle_l, puzzle_o, puzzle_z, puzzle_s
-
-
+from colors import PURPLE
 
 
 class GameEngine():
-    running = True
-    cellSize = 25
-    cell_columnNumber = 11
-    cell_rowNumber = 20
-    FPS = 60
-    background = (200, 200, 200)
-
-    screen = pygame.display.set_mode((cell_columnNumber * cellSize, cell_rowNumber * cellSize))
-    clock = pygame.time.Clock()
-
-    pygame.time.set_timer(USEREVENT, 200)
-
-
-
-
-    def __init__(self):
+    def __init__(self, cell_size, columns_number, rows_number):
+        self.cell_size = cell_size
+        self.columns_number = columns_number
+        self.rows_number = rows_number
+        self.screen = pygame.display.set_mode(
+            size=(columns_number * cell_size, rows_number * cell_size)
+        )
         self.puzzles = [puzzle_t, puzzle_i, puzzle_j, puzzle_l, puzzle_o, puzzle_z, puzzle_s]
         self.puzzle = choice(self.puzzles)
         self.direction = pygame.Vector2(0,0)
         self.all_cells = self.download_all_cells()
         self.obstacles = dict()
         self.game_font = pygame.font.Font(None, 18)
-        self.text_start = self.game_font.render('Press enter to start', True, (140, 40, 230))
-
-    def fps_loop_decorator(self, func):
-        def inner():
-            running = True
-            while running:
-                self.clock.tick(self.FPS)
-                self.screen.fill(self.background)
-                result = func()
-                if result is ...:
-                    break
-                elif callable(result):
-                    running = False
-                pygame.display.update()
-            else:
-                result()
-        return inner
+        self.text_start = self.game_font.render('Press enter to start', True, PURPLE)
 
     def run_event(self):
         return self.fall()
@@ -84,16 +58,16 @@ class GameEngine():
 
     def print_puzzle(self):
         for vector in self.puzzle.vectors:
-            pygame.draw.rect(self.screen, self.puzzle.color, (vector.x * self.cellSize, vector.y * self.cellSize, self.cellSize, self.cellSize))
-            pygame.draw.rect(self.screen, (0,0,0), (vector.x * self.cellSize, vector.y * self.cellSize, self.cellSize, self.cellSize),1)
+            pygame.draw.rect(self.screen, self.puzzle.color, (vector.x * self.cell_size, vector.y * self.cell_size, self.cell_size, self.cell_size))
+            pygame.draw.rect(self.screen, (0,0,0), (vector.x * self.cell_size, vector.y * self.cell_size, self.cell_size, self.cell_size),1)
         for vector in sum(self.obstacles.values(),[]):
-            pygame.draw.rect(self.screen, (170,170,170), (vector.x * self.cellSize, vector.y * self.cellSize, self.cellSize, self.cellSize))
-            pygame.draw.rect(self.screen, (0,0,0), (vector.x * self.cellSize, vector.y * self.cellSize, self.cellSize, self.cellSize),1)
+            pygame.draw.rect(self.screen, (170,170,170), (vector.x * self.cell_size, vector.y * self.cell_size, self.cell_size, self.cell_size))
+            pygame.draw.rect(self.screen, (0,0,0), (vector.x * self.cell_size, vector.y * self.cell_size, self.cell_size, self.cell_size),1)
 
     def download_all_cells(self):
         all_cells = []
-        for column in range(self.cell_columnNumber):
-            for row in range(-5, self.cell_rowNumber):
+        for column in range(self.columns_number):
+            for row in range(-5, self.rows_number):
                 all_cells.append((column, row))
         return all_cells
 
