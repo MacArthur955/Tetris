@@ -1,4 +1,4 @@
-from puzzle import Puzzle_T, Puzzle_O, Puzzle_S, Puzzle_Z, Puzzle_I, Puzzle_L, Puzzle_J
+from .puzzle import Puzzle_T, Puzzle_O, Puzzle_S, Puzzle_Z, Puzzle_I, Puzzle_L, Puzzle_J
 
 
 puzzle_t = Puzzle_T()

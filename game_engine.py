@@ -5,6 +5,8 @@ from random import *
 from models import puzzle_t, puzzle_i, puzzle_j, puzzle_l, puzzle_o, puzzle_z, puzzle_s
 
 
+
+
 class GameEngine():
     cellSize = 25
     cell_columnNumber = 11
@@ -16,9 +18,8 @@ class GameEngine():
     clock = pygame.time.Clock()
 
     pygame.time.set_timer(USEREVENT, 200)
-    game_font = pygame.font.Font("freesansbold.ttf", 18)
 
-    text_start = game_font.render('Press enter to start', True, (140, 40, 230))
+
 
 
     def __init__(self):
@@ -27,7 +28,17 @@ class GameEngine():
         self.direction = pygame.Vector2(0,0)
         self.all_cells = self.download_all_cells()
         self.obstacles = dict()
-        self.menu()
+        self.game_font = pygame.font.Font(None, 18)
+        self.text_start = self.game_font.render('Press enter to start', True, (140, 40, 230))
+
+    def fps_loop_decorator(self, func):
+        def inner():
+            while True:
+                self.clock.tick(self.FPS)
+                self.screen.fill(self.background)
+                func()
+                pygame.display.update()
+        return inner
 
     def run_event(self):
         self.fall()
@@ -64,16 +75,16 @@ class GameEngine():
 
     def print_puzzle(self):
         for vector in self.puzzle.vectors:
-            pygame.draw.rect(self.screen, self.puzzle.color, (vector.x * cellSize, vector.y * cellSize, cellSize, cellSize))
-            pygame.draw.rect(self.screen, (0,0,0), (vector.x * cellSize, vector.y * cellSize, cellSize, cellSize),1)
+            pygame.draw.rect(self.screen, self.puzzle.color, (vector.x * self.cellSize, vector.y * self.cellSize, self.cellSize, self.cellSize))
+            pygame.draw.rect(self.screen, (0,0,0), (vector.x * self.cellSize, vector.y * self.cellSize, self.cellSize, self.cellSize),1)
         for vector in sum(self.obstacles.values(),[]):
-            pygame.draw.rect(self.screen, (170,170,170), (vector.x * cellSize, vector.y * cellSize, cellSize, cellSize))
-            pygame.draw.rect(self.screen, (0,0,0), (vector.x * cellSize, vector.y * cellSize, cellSize, cellSize),1)
+            pygame.draw.rect(self.screen, (170,170,170), (vector.x * self.cellSize, vector.y * self.cellSize, self.cellSize, self.cellSize))
+            pygame.draw.rect(self.screen, (0,0,0), (vector.x * self.cellSize, vector.y * self.cellSize, self.cellSize, self.cellSize),1)
 
     def download_all_cells(self):
         all_cells = []
-        for column in range(cell_columnNumber):
-            for row in range(-5,cell_rowNumber):
+        for column in range(self.cell_columnNumber):
+            for row in range(-5, self.cell_rowNumber):
                 all_cells.append((column, row))
         return all_cells
 
@@ -101,15 +112,3 @@ class GameEngine():
         self.obstacles = dict()
         self.puzzle = choice(self.puzzles)
         self.direction = pygame.Vector2(0, 0)
-
-# Menu
-    def menu(self):
-        while True:
-            clock.tick(FPS)
-            screen.fill(background)
-            for event in pygame.event.get():
-                if event.type == QUIT: pygame.quit()
-                elif event.type == KEYDOWN:
-                    if event.key == K_RETURN: return
-            screen.blit(text_start,(55,110,200,200))
-            pygame.display.update()
