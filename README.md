@@ -7,14 +7,3 @@
 </p>
 <br>
 <p>Simple de-stress game</p>
-<br>
-<br>
-<br>
-<h3>To open the file you need to install the following libraries</h3>
-<hr>
-<h2><b>pygame</b></h2>
-<a href="https://www.pygame.org/news">pygame</a> is a free and open-source cross-platform library for the development of multimedia applications like video games using Python.
-<br>
-<h3><b>Installation</b></h3>
-<p>pip install pygame</p>
-<hr>
