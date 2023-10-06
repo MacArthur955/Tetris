@@ -8,6 +8,7 @@ from models import puzzle_t, puzzle_i, puzzle_j, puzzle_l, puzzle_o, puzzle_z, p
 
 
 class GameEngine():
+    running = True
     cellSize = 25
     cell_columnNumber = 11
     cell_rowNumber = 20
@@ -33,15 +34,22 @@ class GameEngine():
 
     def fps_loop_decorator(self, func):
         def inner():
-            while True:
+            running = True
+            while running:
                 self.clock.tick(self.FPS)
                 self.screen.fill(self.background)
-                func()
+                result = func()
+                if result is ...:
+                    break
+                elif callable(result):
+                    running = False
                 pygame.display.update()
+            else:
+                result()
         return inner
 
     def run_event(self):
-        self.fall()
+        return self.fall()
 
     def run(self):
         self.move()
@@ -67,8 +75,7 @@ class GameEngine():
                 else: self.obstacles[block.y].append(block)
             if any([block.y < 0 for block in sum(self.obstacles.values(),[])]):
                 self.new_game()
-                self.menu()
-                return
+                return None
             self.restart_puzzle()
             self.check_line()
             return False

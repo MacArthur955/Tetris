@@ -1,7 +1,6 @@
-import pygame, random
-from pygame import *
-from random import *
+import pygame
 from game_engine import GameEngine
+from pygame import *
 
 
 pygame.init()
@@ -14,9 +13,10 @@ def tetris():
     game_engine.run()
     for event in pygame.event.get():
         if event.type == QUIT:
-            return
+            return ...
         elif event.type == USEREVENT:
-            game_engine.run_event()
+            if game_engine.run_event() is None:
+                return menu
         elif event.type == KEYDOWN:
             if event.key == K_SPACE: game_engine.fall_down()
             elif event.key == K_w or event.key == K_UP: game_engine.puzzle.update()
@@ -29,10 +29,10 @@ def tetris():
 def menu():
     for event in pygame.event.get():
         if event.type == QUIT:
-            pygame.quit()
+            return ...
         elif event.type == KEYDOWN:
             if event.key == K_RETURN:
-                tetris()
+                return tetris
     game_engine.screen.blit(game_engine.text_start, (55,110,200,200))
 
 
