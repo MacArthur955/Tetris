@@ -15,7 +15,6 @@ text_start = game_font.render("Press enter to start", True, PURPLE)
 
 def tetris():
     game_engine.draw()
-    game_engine.run()
     for event in pygame.event.get():
         if event.type == QUIT:
             return ...
@@ -28,11 +27,11 @@ def tetris():
             elif event.key in [K_w, K_UP]:
                 game_engine.puzzle.change_formation(game_engine.matrix, game_engine.obstacles.values())
             elif event.key in [K_s, K_DOWN]:
-                game_engine.direction = pygame.Vector2(0, 1)
+                game_engine.puzzle.move(0, 1, game_engine.matrix, game_engine.obstacles.values())
             elif event.key in [K_a, K_LEFT]:
-                game_engine.direction = pygame.Vector2(-1, 0)
+                game_engine.puzzle.move(-1, 0, game_engine.matrix, game_engine.obstacles.values())
             elif event.key in [K_d, K_RIGHT]:
-                game_engine.direction = pygame.Vector2(1, 0)
+                game_engine.puzzle.move(1, 0, game_engine.matrix, game_engine.obstacles.values())
 
 
 def main_menu():

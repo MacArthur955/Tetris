@@ -19,6 +19,12 @@ class BasePuzzle:
         self.locus = [self.locus[0] + vector for vector in self.current_formation]
         self.next_locus = [self.locus[0] + vector for vector in self.next_formation]
 
+    def move(self, x, y, matrix, obstacles):
+        direction = pygame.Vector2(x, y)
+        if all(x + direction in matrix and x + direction not in sum(obstacles, []) for x in self.locus):
+            self.locus[0] += direction
+            self.regroup()
+
     def reset(self):
         self.locus = [(pygame.Vector2(5, -2))]
         self.formations = itertools.cycle(self.available_formations)

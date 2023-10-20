@@ -12,23 +12,12 @@ class GameEngine:
         )
         self.puzzles = [puzzle_t, puzzle_i, puzzle_j, puzzle_l, puzzle_o, puzzle_z, puzzle_s]
         self.puzzle = random.choice(self.puzzles)
-        self.direction = pygame.Vector2(0, 0)
         self.matrix = [(x, y) for x in range(COLUMS_NUMBER) for y in range(-5, ROWS_NUMBER)]
         self.obstacles = dict()
-
-    def run(self):
-        self.move()
 
     def draw(self):
         self.print_puzzle()
         self.print_obstacles()
-
-# Game
-    def move(self):
-        if self.direction and all(x + self.direction in self.matrix and x + self.direction not in sum(self.obstacles.values(),[]) for x in self.puzzle.locus):
-            self.puzzle.locus[0] += self.direction
-            self.puzzle.regroup()
-        self.direction = pygame.Vector2(0, 0)
 
     def fall(self):
         if all(x + (0, 1) in self.matrix and x + (0, 1) not in sum(self.obstacles.values(),[]) for x in self.puzzle.locus):
@@ -84,4 +73,3 @@ class GameEngine:
     def new_game(self):
         self.obstacles = dict()
         self.puzzle = random.choice(self.puzzles)
-        self.direction = pygame.Vector2(0, 0)
