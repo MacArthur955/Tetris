@@ -20,7 +20,7 @@ class GameEngine:
 
     @property
     def obstacles(self):
-        return {(column, row) for row in self.__obstacles.keys() for column in self.__obstacles[row]}
+        return {(x, y) for y in self.__obstacles.keys() for x in self.__obstacles[y]}
 
     @property
     def available_matrix(self) -> set:
@@ -29,18 +29,18 @@ class GameEngine:
     def fall(self):
         if self.puzzle.move(DOWN, self.available_matrix):
             return True
-        elif any(block in list(self.obstacles) for block in self.puzzle.locus):
-            self.__obstacles = defaultdict(lambda: set())
-            self.puzzle.reset()
-            self.puzzle = random.choice(self.puzzles)
-            return None
-        else:
+        elif self.obstacles.isdisjoint(self.puzzle.locus):
             for x, y in self.puzzle.locus:
-                self.__obstacles[int(y)].add(int(x))
+                self.__obstacles[y].add(x)
             self.check_rows()
             self.puzzle.reset()
             self.puzzle = random.choice(self.puzzles)
             return False
+        else:
+            self.__obstacles = defaultdict(lambda: set())
+            self.puzzle.reset()
+            self.puzzle = random.choice(self.puzzles)
+            return None
 
     def draw_puzzles(self):
         for x, y in self.puzzle.locus:

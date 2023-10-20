@@ -10,14 +10,14 @@ class BasePuzzle:
         self.next_locus = [(column + x, row + y) for x, y in self.next_formation]
 
     def change_formation(self, available_matrix: set):
-        if all(vector in list(available_matrix) for vector in self.next_locus):
+        if available_matrix >= set(self.next_locus):
             self.current_formation = self.next_formation
             self.next_formation = next(self.formations)
             self.regroup()
 
     def move(self, direction: tuple[int, int], available_matrix: set):
         column, row = direction
-        if all((column + x, row + y) in list(available_matrix) for x, y in self.locus):
+        if available_matrix >= {(column + x, row + y) for x, y in self.locus}:
             x, y = self.locus[0]
             self.locus[0] = (column + x, row + y)
             self.regroup()
