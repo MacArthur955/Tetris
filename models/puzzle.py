@@ -5,8 +5,9 @@ import itertools
 
 class BasePuzzle:
     def regroup(self):
-        self.locus = [self.locus[0] + vector for vector in self.current_formation]
-        self.next_locus = [self.locus[0] + vector for vector in self.next_formation]
+        column, row = self.locus[0]
+        self.locus = [(column + x, row + y) for x, y in self.current_formation]
+        self.next_locus = [(column + x, row + y) for x, y in self.next_formation]
 
     def change_formation(self, available_matrix: set):
         if all(vector in list(available_matrix) for vector in self.next_locus):
@@ -15,14 +16,16 @@ class BasePuzzle:
             self.regroup()
 
     def move(self, direction: tuple[int, int], available_matrix: set):
-        if all(block + direction in list(available_matrix) for block in self.locus):
-            self.locus[0] += direction
+        column, row = direction
+        if all((column + x, row + y) in list(available_matrix) for x, y in self.locus):
+            x, y = self.locus[0]
+            self.locus[0] = (column + x, row + y)
             self.regroup()
             return True
         return False
 
     def reset(self):
-        self.locus = [(pygame.Vector2(5, -2))]
+        self.locus = [(5, -2)]
         self.formations = itertools.cycle(self.available_formations)
         self.current_formation = next(self.formations)
         self.next_formation = next(self.formations)
