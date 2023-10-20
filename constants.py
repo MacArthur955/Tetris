@@ -1,4 +1,7 @@
+# COLORS
+BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
+DARK_GRAY = (170, 170, 170)
 PURPLE = (140, 40, 230)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
@@ -7,3 +10,8 @@ PINK = (255, 0, 255)
 YELLOW = (180, 180, 20)
 PURPLE = (180, 20, 180)
 EMERLAND = (20, 180, 180)
+
+# DIRECTIONS
+LEFT = (-1, 0)
+RIGHT = (1, 0)
+DOWN = (0, 1)

@@ -1,29 +1,25 @@
 import pygame
-from colors import RED, BLUE, GREEN, PINK, YELLOW, PURPLE, EMERLAND
+from constants import RED, BLUE, GREEN, PINK, YELLOW, PURPLE, EMERLAND
 import itertools
 
 
 class BasePuzzle:
-    def change_formation(self, matrix, obstacles):
-        if all(
-            [
-                vector in matrix and vector not in sum(obstacles, [])
-                for vector in self.next_locus
-            ]
-        ):
-            self.current_formation = self.next_formation
-            self.next_formation = next(self.formations)
-            self.regroup()
-
     def regroup(self):
         self.locus = [self.locus[0] + vector for vector in self.current_formation]
         self.next_locus = [self.locus[0] + vector for vector in self.next_formation]
 
-    def move(self, x, y, matrix, obstacles):
-        direction = pygame.Vector2(x, y)
-        if all(x + direction in matrix and x + direction not in sum(obstacles, []) for x in self.locus):
+    def change_formation(self, available_matrix: set):
+        if all(vector in list(available_matrix) for vector in self.next_locus):
+            self.current_formation = self.next_formation
+            self.next_formation = next(self.formations)
+            self.regroup()
+
+    def move(self, direction: tuple[int, int], available_matrix: set):
+        if all(block + direction in list(available_matrix) for block in self.locus):
             self.locus[0] += direction
             self.regroup()
+            return True
+        return False
 
     def reset(self):
         self.locus = [(pygame.Vector2(5, -2))]

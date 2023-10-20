@@ -2,7 +2,7 @@ import pygame
 from pygame.constants import *
 
 from game_engine import GameEngine
-from colors import GRAY, PURPLE
+from constants import GRAY, PURPLE, DOWN, LEFT, RIGHT
 
 
 pygame.init()
@@ -14,8 +14,8 @@ text_start = game_font.render("Press enter to start", True, PURPLE)
 
 
 def tetris():
-    game_engine.print_puzzle()
-    game_engine.print_obstacles()
+    game_engine.draw_puzzles()
+    game_engine.draw_obstacles()
     for event in pygame.event.get():
         if event.type == QUIT:
             return ...
@@ -26,13 +26,13 @@ def tetris():
             if event.key == K_SPACE:
                 game_engine.fall_down()
             elif event.key in [K_w, K_UP]:
-                game_engine.puzzle.change_formation(game_engine.matrix, game_engine.obstacles.values())
+                game_engine.puzzle.change_formation(game_engine.available_matrix)
             elif event.key in [K_s, K_DOWN]:
-                game_engine.puzzle.move(0, 1, game_engine.matrix, game_engine.obstacles.values())
+                game_engine.puzzle.move(DOWN, game_engine.available_matrix)
             elif event.key in [K_a, K_LEFT]:
-                game_engine.puzzle.move(-1, 0, game_engine.matrix, game_engine.obstacles.values())
+                game_engine.puzzle.move(LEFT, game_engine.available_matrix)
             elif event.key in [K_d, K_RIGHT]:
-                game_engine.puzzle.move(1, 0, game_engine.matrix, game_engine.obstacles.values())
+                game_engine.puzzle.move(RIGHT, game_engine.available_matrix)
 
 
 def main_menu():

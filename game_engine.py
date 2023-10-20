@@ -1,8 +1,11 @@
+import itertools
+from collections import defaultdict
+
 import pygame
 import random
-from pygame import *
 from models import puzzle_t, puzzle_i, puzzle_j, puzzle_l, puzzle_o, puzzle_z, puzzle_s
 from settings import COLUMS_NUMBER, ROWS_NUMBER, CELL_SIZE
+from constants import DOWN, DARK_GRAY, BLACK
 
 
 class GameEngine:
@@ -12,60 +15,53 @@ class GameEngine:
         )
         self.puzzles = [puzzle_t, puzzle_i, puzzle_j, puzzle_l, puzzle_o, puzzle_z, puzzle_s]
         self.puzzle = random.choice(self.puzzles)
-        self.matrix = [(x, y) for x in range(COLUMS_NUMBER) for y in range(-5, ROWS_NUMBER)]
-        self.obstacles = dict()
+        self.__matrix: set[tuple[int, int]] = {(x, y) for x in range(COLUMS_NUMBER) for y in range(-5, ROWS_NUMBER)}
+        self.__obstacles: defaultdict = defaultdict(lambda: set())
+
+    @property
+    def obstacles(self):
+        return {(column, row) for row in self.__obstacles.keys() for column in self.__obstacles[row]}
+
+    @property
+    def available_matrix(self) -> set:
+        return self.__matrix - self.obstacles
 
     def fall(self):
-        if all(x + (0, 1) in self.matrix and x + (0, 1) not in sum(self.obstacles.values(),[]) for x in self.puzzle.locus):
-            self.puzzle.locus[0] += (0, 1)
-            self.puzzle.regroup()
+        if self.puzzle.move(DOWN, self.available_matrix):
             return True
+        elif any(block in list(self.obstacles) for block in self.puzzle.locus):
+            self.__obstacles = defaultdict(lambda: set())
+            self.puzzle.reset()
+            self.puzzle = random.choice(self.puzzles)
+            return None
         else:
-            for block in self.puzzle.locus:
-                if block.y not in self.obstacles:
-                    self.obstacles[block.y] = [block]
-                else:
-                    self.obstacles[block.y].append(block)
-            if any([block.y < 0 for block in sum(self.obstacles.values(),[])]):
-                self.new_game()
-                return None
-            self.restart_puzzle()
-            self.check_line()
+            for x, y in self.puzzle.locus:
+                self.__obstacles[int(y)].add(int(x))
+            self.check_rows()
+            self.puzzle.reset()
+            self.puzzle = random.choice(self.puzzles)
             return False
 
-    def print_puzzle(self):
-        for vector in self.puzzle.locus:
-            pygame.draw.rect(
-                surface=self.screen,
-                color=self.puzzle.color,
-                rect=(vector.x * CELL_SIZE, vector.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-            )
-            pygame.draw.rect(self.screen, (0,0,0), (vector.x * CELL_SIZE, vector.y * CELL_SIZE, CELL_SIZE, CELL_SIZE),1)
+    def draw_puzzles(self):
+        for x, y in self.puzzle.locus:
+            rect = (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+            pygame.draw.rect(surface=self.screen, color=self.puzzle.color, rect=rect)
+            pygame.draw.rect(surface=self.screen, color=BLACK, rect=rect, width=1)
 
-    def print_obstacles(self):
-        for vector in sum(self.obstacles.values(),[]):
-            pygame.draw.rect(self.screen, (170,170,170), (vector.x * CELL_SIZE, vector.y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-            pygame.draw.rect(self.screen, (0,0,0), (vector.x * CELL_SIZE, vector.y * CELL_SIZE, CELL_SIZE, CELL_SIZE),1)
+    def draw_obstacles(self):
+        for x, y in self.obstacles:
+            rect = (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+            pygame.draw.rect(self.screen, DARK_GRAY, rect)
+            pygame.draw.rect(self.screen, BLACK, rect, 1)
 
-    def restart_puzzle(self):
-        self.puzzle.reset()
-        self.puzzle = random.choice(self.puzzles)
-
-    def check_line(self):
-        delete_lines = [i for i in self.obstacles if len(self.obstacles[i]) > 10]
-        for line in sorted(delete_lines):
-            if len(self.obstacles) == 1: del(self.obstacles[line])
-            else:
-                for i in reversed(range(20-len(self.obstacles), int(line))):
-                    self.obstacles[float(i + 1)] = self.obstacles[float(i)]
-                    for x in self.obstacles[float(i + 1)]:
-                        x.y += 1
-                del(self.obstacles[20.0-float(len(self.obstacles))])
+    def check_rows(self):
+        rows_to_delete = [row for row, columns in self.__obstacles.items() if len(columns) >= COLUMS_NUMBER]
+        for row in sorted(rows_to_delete):
+            highest_row = min(self.__obstacles)
+            for y in range(row, highest_row, -1):
+                self.__obstacles[y] = self.__obstacles[y - 1]
+            del self.__obstacles[highest_row]
 
     def fall_down(self):
         while self.fall():
             pass
-
-    def new_game(self):
-        self.obstacles = dict()
-        self.puzzle = random.choice(self.puzzles)
