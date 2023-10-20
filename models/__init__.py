@@ -1,13 +1,13 @@
-from .puzzle import Puzzle_T, Puzzle_O, Puzzle_S, Puzzle_Z, Puzzle_I, Puzzle_L, Puzzle_J
+from .puzzle import T, O, S, Z, I, L, J
 
 
-puzzle_t = Puzzle_T()
-puzzle_o = Puzzle_O()
-puzzle_s = Puzzle_S()
-puzzle_z = Puzzle_Z()
-puzzle_i = Puzzle_I()
-puzzle_l = Puzzle_L()
-puzzle_j = Puzzle_J()
+puzzle_t = T()
+puzzle_o = O()
+puzzle_s = S()
+puzzle_z = Z()
+puzzle_i = I()
+puzzle_l = L()
+puzzle_j = J()
 
 
 __all__ = [

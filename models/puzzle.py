@@ -1,114 +1,100 @@
 import pygame
+from colors import RED, BLUE, GREEN, PINK, YELLOW, PURPLE, EMERLAND
+import itertools
 
 
 class BasePuzzle:
-    def __init__(self):
-        self.vectors = [(pygame.Vector2(5, -2))]
-        self.vectors_next = []
-        self.index = 0
-
-    def update(self, available_cells, obstacles):
+    def change_formation(self, matrix, obstacles):
         if all(
             [
-                vector in available_cells
-                and vector not in sum(obstacles, [])
-                for vector in self.vectors_next
+                vector in matrix and vector not in sum(obstacles, [])
+                for vector in self.next_locus
             ]
         ):
-            self.index += 1
-            if self.index >= len(self.vectors_dic):
-                self.index = 0
-            self.refresh()
+            self.current_formation = self.next_formation
+            self.next_formation = next(self.formations)
+            self.regroup()
 
-    def refresh(self):
-        self.vectors = [
-            self.vectors[0] + vector for vector in self.vectors_dic[self.index]
+    def regroup(self):
+        self.locus = [self.locus[0] + vector for vector in self.current_formation]
+        self.next_locus = [self.locus[0] + vector for vector in self.next_formation]
+
+    def reset(self):
+        self.locus = [(pygame.Vector2(5, -2))]
+        self.formations = itertools.cycle(self.available_formations)
+        self.current_formation = next(self.formations)
+        self.next_formation = next(self.formations)
+        self.regroup()
+
+
+class T(BasePuzzle):
+    def __init__(self):
+        self.available_formations = [
+            [(0, 0), (-1, 1), (0, 1), (1, 1)],
+            [(0, 0), (1, -1), (1, 0), (1, 1)],
+            [(0, 0), (-1, 0), (0, 1), (1, 0)],
+            [(0, 0), (-1, -1), (-1, 0), (-1, 1)],
         ]
-        try:
-            self.vectors_next = [
-                self.vectors[0] + vector for vector in self.vectors_dic[self.index + 1]
-            ]
-        except Exception:
-            self.vectors_next = [
-                self.vectors[0] + vector for vector in self.vectors_dic[0]
-            ]
+        self.color = RED
+        self.reset()
 
 
-class Puzzle_T(BasePuzzle):
+class O(BasePuzzle):
     def __init__(self):
-        super().__init__()
-        self.vectors_dic = {
-            0: [(0, 0), (-1, 1), (0, 1), (1, 1)],
-            1: [(0, 0), (1, -1), (1, 0), (1, 1)],
-            2: [(0, 0), (-1, 0), (0, 1), (1, 0)],
-            3: [(0, 0), (-1, -1), (-1, 0), (-1, 1)],
-        }
-        self.color = (255, 0, 0)
-        self.refresh()
+        self.available_formations = [[(0, 0), (0, -1), (1, 0), (1, -1)]]
+        self.color = BLUE
+        self.reset()
 
 
-class Puzzle_O(BasePuzzle):
+class S(BasePuzzle):
     def __init__(self):
-        super().__init__()
-        self.vectors_dic = {0: [(0, 0), (0, -1), (1, 0), (1, -1)]}
-        self.color = (0, 0, 255)
-        self.refresh()
+        self.available_formations = [
+            [(0, 0), (-1, 1), (0, 1), (1, 0)],
+            [(0, 0), (-1, -1), (-1, 0), (0, 1)],
+        ]
+        self.color = GREEN
+        self.reset()
 
 
-class Puzzle_S(BasePuzzle):
+class Z(BasePuzzle):
     def __init__(self):
-        super().__init__()
-        self.vectors_dic = {
-            0: [(0, 0), (-1, 1), (0, 1), (1, 0)],
-            1: [(0, 0), (-1, -1), (-1, 0), (0, 1)],
-        }
-        self.color = (0, 255, 0)
-        self.refresh()
+        self.available_formations = [
+            [(0, 0), (-1, 0), (0, 1), (1, 1)],
+            [(0, 0), (0, -1), (-1, 0), (-1, 1)],
+        ]
+        self.color = PINK
+        self.reset()
 
 
-class Puzzle_Z(BasePuzzle):
+class I(BasePuzzle):
     def __init__(self):
-        super().__init__()
-        self.vectors_dic = {
-            0: [(0, 0), (-1, 0), (0, 1), (1, 1)],
-            1: [(0, 0), (0, -1), (-1, 0), (-1, 1)],
-        }
-        self.color = (255, 0, 255)
-        self.refresh()
+        self.available_formations = [
+            [(0, 0), (-1, 0), (1, 0), (2, 0)],
+            [(0, 0), (0, -1), (0, -2), (0, -3)],
+        ]
+        self.color = YELLOW
+        self.reset()
 
 
-class Puzzle_I(BasePuzzle):
+class L(BasePuzzle):
     def __init__(self):
-        super().__init__()
-        self.vectors_dic = {
-            0: [(0, 0), (-1, 0), (1, 0), (2, 0)],
-            1: [(0, 0), (0, -1), (0, -2), (0, -3)],
-        }
-        self.color = (180, 180, 20)
-        self.refresh()
+        self.available_formations = [
+            [(0, 0), (0, -2), (0, -1), (1, 0)],
+            [(0, 0), (0, -1), (1, -1), (2, -1)],
+            [(0, 0), (-1, -2), (0, -1), (0, -2)],
+            [(0, 0), (1, -1), (1, 0), (-1, 0)],
+        ]
+        self.color = EMERLAND
+        self.reset()
 
 
-class Puzzle_L(BasePuzzle):
+class J(BasePuzzle):
     def __init__(self):
-        super().__init__()
-        self.vectors_dic = {
-            0: [(0, 0), (0, -2), (0, -1), (1, 0)],
-            1: [(0, 0), (0, -1), (1, -1), (2, -1)],
-            2: [(0, 0), (-1, -2), (0, -1), (0, -2)],
-            3: [(0, 0), (1, -1), (1, 0), (-1, 0)],
-        }
-        self.color = (20, 180, 180)
-        self.refresh()
-
-
-class Puzzle_J(BasePuzzle):
-    def __init__(self):
-        super().__init__()
-        self.vectors_dic = {
-            0: [(0, 0), (0, -2), (0, -1), (-1, 0)],
-            1: [(0, 0), (0, -1), (-1, -1), (-2, -1)],
-            2: [(0, 0), (1, -2), (0, -1), (0, -2)],
-            3: [(0, 0), (-1, -1), (1, 0), (-1, 0)],
-        }
-        self.color = (180, 20, 180)
-        self.refresh()
+        self.available_formations = [
+            [(0, 0), (0, -2), (0, -1), (-1, 0)],
+            [(0, 0), (0, -1), (-1, -1), (-2, -1)],
+            [(0, 0), (1, -2), (0, -1), (0, -2)],
+            [(0, 0), (-1, -1), (1, 0), (-1, 0)],
+        ]
+        self.color = PURPLE
+        self.reset()
