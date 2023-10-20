@@ -14,7 +14,8 @@ text_start = game_font.render("Press enter to start", True, PURPLE)
 
 
 def tetris():
-    game_engine.draw()
+    game_engine.print_puzzle()
+    game_engine.print_obstacles()
     for event in pygame.event.get():
         if event.type == QUIT:
             return ...

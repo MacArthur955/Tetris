@@ -15,10 +15,6 @@ class GameEngine:
         self.matrix = [(x, y) for x in range(COLUMS_NUMBER) for y in range(-5, ROWS_NUMBER)]
         self.obstacles = dict()
 
-    def draw(self):
-        self.print_puzzle()
-        self.print_obstacles()
-
     def fall(self):
         if all(x + (0, 1) in self.matrix and x + (0, 1) not in sum(self.obstacles.values(),[]) for x in self.puzzle.locus):
             self.puzzle.locus[0] += (0, 1)
