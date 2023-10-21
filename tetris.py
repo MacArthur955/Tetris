@@ -1,8 +1,8 @@
 import pygame
 from pygame.constants import *
 
+from constants import DOWN, GRAY, LEFT, PURPLE, RIGHT
 from game_engine import GameEngine
-from constants import GRAY, PURPLE, DOWN, LEFT, RIGHT
 
 
 pygame.init()

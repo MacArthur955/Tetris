@@ -1,11 +1,11 @@
-import itertools
+import random
 from collections import defaultdict
 
 import pygame
-import random
-from models import puzzle_t, puzzle_i, puzzle_j, puzzle_l, puzzle_o, puzzle_z, puzzle_s
-from settings import COLUMS_NUMBER, ROWS_NUMBER, CELL_SIZE
-from constants import DOWN, DARK_GRAY, BLACK
+
+from constants import BLACK, DARK_GRAY, DOWN
+from models import puzzle_i, puzzle_j, puzzle_l, puzzle_o, puzzle_s, puzzle_t, puzzle_z
+from settings import CELL_SIZE, COLUMS_NUMBER, ROWS_NUMBER
 
 
 class GameEngine:
@@ -15,7 +15,9 @@ class GameEngine:
         )
         self.puzzles = [puzzle_t, puzzle_i, puzzle_j, puzzle_l, puzzle_o, puzzle_z, puzzle_s]
         self.puzzle = random.choice(self.puzzles)
-        self.__matrix: set[tuple[int, int]] = {(x, y) for x in range(COLUMS_NUMBER) for y in range(-5, ROWS_NUMBER)}
+        self.__matrix: set[tuple[int, int]] = {
+            (x, y) for x in range(COLUMS_NUMBER) for y in range(-5, ROWS_NUMBER)
+        }
         self.__obstacles: defaultdict = defaultdict(lambda: set())
 
     @property
@@ -55,7 +57,9 @@ class GameEngine:
             pygame.draw.rect(self.screen, BLACK, rect, 1)
 
     def check_rows(self):
-        rows_to_delete = [row for row, columns in self.__obstacles.items() if len(columns) >= COLUMS_NUMBER]
+        rows_to_delete = [
+            row for row, columns in self.__obstacles.items() if len(columns) >= COLUMS_NUMBER
+        ]
         for row in sorted(rows_to_delete):
             highest_row = min(self.__obstacles)
             for y in range(row, highest_row, -1):

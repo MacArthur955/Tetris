@@ -1,4 +1,4 @@
-from .puzzle import T, O, S, Z, I, L, J
+from .puzzle import I, J, L, O, S, T, Z
 
 
 puzzle_t = T()

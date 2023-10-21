@@ -1,6 +1,6 @@
-import pygame
-from constants import RED, BLUE, GREEN, PINK, YELLOW, PURPLE, EMERLAND
 import itertools
+
+from constants import BLUE, EMERLAND, GREEN, PINK, PURPLE, RED, YELLOW
 
 
 class BasePuzzle:
