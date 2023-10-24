@@ -1,38 +1,47 @@
 import pygame
 from pygame.constants import *
 
-from constants import DOWN, GRAY, LEFT, PURPLE, RIGHT
+from constants import DARK_GRAY, DOWN, GRAY, LEFT, PURPLE, RIGHT
 from game_engine import GameEngine
+from settings import CELL_SIZE, COLUMS_NUMBER, ROWS_NUMBER
 
 
 pygame.init()
-game_engine = GameEngine()
+engine = GameEngine()
+
+# Setup game screen
+width, height = COLUMS_NUMBER * CELL_SIZE, ROWS_NUMBER * CELL_SIZE
+screen = pygame.display.set_mode(size=(width, height))
+
+# Setup game timer
 pygame.time.set_timer(USEREVENT, 200)
 clock = pygame.time.Clock()
+
+# Setup fonts and render texts
 game_font = pygame.font.Font(size=18)
 text_start = game_font.render("Press enter to start", True, PURPLE)
 
 
 def tetris():
-    game_engine.draw_puzzles()
-    game_engine.draw_obstacles()
+    engine.draw_blocks(screen=screen, color=engine.puzzle.color, blocks=engine.puzzle.locus)
+    engine.draw_blocks(screen=screen, color=DARK_GRAY, blocks=engine.obstacles)
     for event in pygame.event.get():
         if event.type == QUIT:
             return ...
         elif event.type == USEREVENT:
-            if game_engine.fall() is None:
+            if engine.fall() is None:
                 return main_menu
         elif event.type == KEYDOWN:
             if event.key == K_SPACE:
-                game_engine.fall_down()
+                engine.fall_down()
             elif event.key in [K_w, K_UP]:
-                game_engine.puzzle.change_formation(game_engine.available_matrix)
+                engine.puzzle.change_formation(engine.available_matrix)
             elif event.key in [K_s, K_DOWN]:
-                game_engine.puzzle.move(DOWN, game_engine.available_matrix)
+                engine.puzzle.move(DOWN, engine.available_matrix)
             elif event.key in [K_a, K_LEFT]:
-                game_engine.puzzle.move(LEFT, game_engine.available_matrix)
+                engine.puzzle.move(LEFT, engine.available_matrix)
             elif event.key in [K_d, K_RIGHT]:
-                game_engine.puzzle.move(RIGHT, game_engine.available_matrix)
+                engine.puzzle.move(RIGHT, engine.available_matrix)
 
 
 def main_menu():
@@ -42,14 +51,14 @@ def main_menu():
         elif event.type == KEYDOWN:
             if event.key == K_RETURN:
                 return tetris
-    game_engine.screen.blit(source=text_start, dest=(55, 110, 200, 200))
+    screen.blit(source=text_start, dest=(55, 110, 200, 200))
 
 
 # Main loop
 main_view = main_menu
 while True:
     clock.tick(60)
-    game_engine.screen.fill(GRAY)
+    screen.fill(GRAY)
     if feedback := main_view():
         if callable(feedback):
             main_view = feedback

@@ -1,20 +1,17 @@
 import random
 from collections import defaultdict
+from typing import Iterable
 
 import pygame
 
-from constants import BLACK, DARK_GRAY, DOWN
-from models import puzzle_i, puzzle_j, puzzle_l, puzzle_o, puzzle_s, puzzle_t, puzzle_z
+from constants import BLACK, DOWN
+from models import puzzles
 from settings import CELL_SIZE, COLUMS_NUMBER, ROWS_NUMBER
 
 
 class GameEngine:
     def __init__(self):
-        self.screen = pygame.display.set_mode(
-            size=(COLUMS_NUMBER * CELL_SIZE, ROWS_NUMBER * CELL_SIZE)
-        )
-        self.puzzles = [puzzle_t, puzzle_i, puzzle_j, puzzle_l, puzzle_o, puzzle_z, puzzle_s]
-        self.puzzle = random.choice(self.puzzles)
+        self.puzzle = random.choice(puzzles)
         self.__matrix: set[tuple[int, int]] = {
             (x, y) for x in range(COLUMS_NUMBER) for y in range(-5, ROWS_NUMBER)
         }
@@ -36,25 +33,20 @@ class GameEngine:
                 self.__obstacles[y].add(x)
             self.check_rows()
             self.puzzle.reset()
-            self.puzzle = random.choice(self.puzzles)
+            self.puzzle = random.choice(puzzles)
             return False
         else:
             self.__obstacles = defaultdict(lambda: set())
             self.puzzle.reset()
-            self.puzzle = random.choice(self.puzzles)
+            self.puzzle = random.choice(puzzles)
             return None
 
-    def draw_puzzles(self):
-        for x, y in self.puzzle.locus:
+    @staticmethod
+    def draw_blocks(screen: pygame, color: tuple[int, int, int], blocks: Iterable):
+        for x, y in blocks:
             rect = (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-            pygame.draw.rect(surface=self.screen, color=self.puzzle.color, rect=rect)
-            pygame.draw.rect(surface=self.screen, color=BLACK, rect=rect, width=1)
-
-    def draw_obstacles(self):
-        for x, y in self.obstacles:
-            rect = (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-            pygame.draw.rect(self.screen, DARK_GRAY, rect)
-            pygame.draw.rect(self.screen, BLACK, rect, 1)
+            pygame.draw.rect(screen, color, rect)
+            pygame.draw.rect(screen, BLACK, rect, 1)
 
     def check_rows(self):
         rows_to_delete = [
