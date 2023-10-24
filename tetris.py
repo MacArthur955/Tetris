@@ -18,7 +18,7 @@ pygame.time.set_timer(USEREVENT, 200)
 clock = pygame.time.Clock()
 
 # Setup fonts and render texts
-game_font = pygame.font.Font(size=18)
+game_font = pygame.font.Font(name="standard_font", size=18)
 text_start = game_font.render("Press enter to start", True, PURPLE)
 
 
@@ -59,10 +59,10 @@ main_view = main_menu
 while True:
     clock.tick(60)
     screen.fill(GRAY)
-    if feedback := main_view():
-        if callable(feedback):
-            main_view = feedback
-        elif feedback is ...:
+    if new_view := main_view():
+        if callable(new_view):
+            main_view = new_view
+        elif new_view is ...:
             break
     pygame.display.update()
 
