@@ -3,14 +3,14 @@ from pygame.constants import *
 
 from constants import DARK_GRAY, DOWN, GRAY, LEFT, PURPLE, RIGHT
 from game_engine import GameEngine
-from settings import CELL_SIZE, COLUMS_NUMBER, ROWS_NUMBER
+from settings import CELL_SIZE, COLUMNS_NUMBER, ROWS_NUMBER
 
 
 pygame.init()
 engine = GameEngine()
 
 # Setup game screen
-width, height = COLUMS_NUMBER * CELL_SIZE, ROWS_NUMBER * CELL_SIZE
+width, height = COLUMNS_NUMBER * CELL_SIZE, ROWS_NUMBER * CELL_SIZE
 screen = pygame.display.set_mode(size=(width, height))
 
 # Setup game timer

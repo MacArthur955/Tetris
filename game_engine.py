@@ -6,14 +6,14 @@ import pygame
 
 from constants import BLACK, DOWN
 from models import puzzles
-from settings import CELL_SIZE, COLUMS_NUMBER, ROWS_NUMBER
+from settings import CELL_SIZE, COLUMNS_NUMBER, ROWS_NUMBER
 
 
 class GameEngine:
     def __init__(self):
         self.puzzle = random.choice(puzzles)
         self.__matrix: set[tuple[int, int]] = {
-            (x, y) for x in range(COLUMS_NUMBER) for y in range(-5, ROWS_NUMBER)
+            (x, y) for x in range(COLUMNS_NUMBER) for y in range(-5, ROWS_NUMBER)
         }
         self.__obstacles: defaultdict = defaultdict(lambda: set())
 
@@ -50,7 +50,7 @@ class GameEngine:
 
     def check_rows(self):
         rows_to_delete = [
-            row for row, columns in self.__obstacles.items() if len(columns) >= COLUMS_NUMBER
+            row for row, columns in self.__obstacles.items() if len(columns) >= COLUMNS_NUMBER
         ]
         for row in sorted(rows_to_delete):
             highest_row = min(self.__obstacles)
