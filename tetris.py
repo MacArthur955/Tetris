@@ -18,8 +18,9 @@ pygame.time.set_timer(USEREVENT, 200)
 clock = pygame.time.Clock()
 
 # Setup fonts and render texts
-game_font = pygame.font.Font(name="standard_font", size=18)
+game_font = pygame.font.Font(size=20)
 text_start = game_font.render("Press enter to start", True, PURPLE)
+text_start_rectangle = text_start.get_rect(center=(width / 2, height / 4))
 
 
 def tetris():
@@ -51,7 +52,7 @@ def main_menu():
         elif event.type == KEYDOWN:
             if event.key == K_RETURN:
                 return tetris
-    screen.blit(source=text_start, dest=(55, 110, 200, 200))
+    screen.blit(source=text_start, dest=text_start_rectangle)
 
 
 # Main loop
