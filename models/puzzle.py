@@ -1,6 +1,7 @@
 import itertools
 
 from constants import BLUE, EMERLAND, GREEN, PINK, PURPLE, RED, YELLOW
+from settings import COLUMNS_NUMBER
 
 
 class BasePuzzle:
@@ -40,7 +41,7 @@ class BasePuzzle:
 
     @classmethod
     def reset(cls):
-        cls.locus = [(5, -2)]
+        cls.locus = [(COLUMNS_NUMBER / 2, -2)]
         cls.formations = itertools.cycle(cls.available_formations)
         cls.current_formation = next(cls.formations)
         cls.next_formation = next(cls.formations)
